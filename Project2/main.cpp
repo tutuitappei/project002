@@ -1,5 +1,6 @@
 #include<DxLib.h>
 #include "main.h"
+#include"Scene/Scenemanager.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -14,6 +15,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		{
 			return false;
 		}
+		lpScene.Run();
 		ScreenFlip();
 	}
 

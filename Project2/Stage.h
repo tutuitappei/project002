@@ -8,7 +8,7 @@
 
 
 #define STAGE_MAP_X 8
-#define STAGE_MAP_Y 15
+#define STAGE_MAP_Y 13
 
 class PlayUnit;
 struct Dorop;

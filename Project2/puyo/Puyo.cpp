@@ -1,6 +1,16 @@
 #include<DxLib.h>
 #include "Puyo.h"
 
+//struct Puyo puyocolor(PuyoID id,int)
+//{
+//    puyocolor(PuyoID::Red, 0xff0000);
+//    puyocolor(PuyoID::Blue, 0x0000ff);
+//    puyocolor(PuyoID::Green, 0x00ff00);
+//    puyocolor(PuyoID::Yellow, 0xffff00);
+//    puyocolor(PuyoID::Purpule, 0xff00ff);
+//    puyocolor(PuyoID::Ojama, 0x777777);
+//};
+
 Puyo::Puyo(Vector2 vec, PuyoID id)
 {
     _pos = vec;
@@ -72,7 +82,7 @@ bool Puyo::SetDirParmit(Dirpermit dirparmit)
 
 PuyoID Puyo::GetID(void)
 {
-    return PuyoID((rand() % (static_cast<int>(PuyoID::MAX) - 3)) + 1);
+    return PuyoID((rand() % (static_cast<int>(PuyoID::MAX) - 4)) + 1);
 }
 
 const Vector2 Puyo::GetGrid(int size)
