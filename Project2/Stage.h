@@ -1,0 +1,98 @@
+#pragma once
+#include<vector>
+#include<memory>
+#include<list>
+#include"Vector2.h"
+#include"input/Controller.h"
+#include"puyo/Puyo.h"
+
+
+#define STAGE_MAP_X 8
+#define STAGE_MAP_Y 15
+
+class PlayUnit;
+struct Dorop;
+struct Elase;
+struct Puyon;
+struct Munyon;
+struct Fall;
+struct Ojamamode;
+
+
+enum class StgMode
+{
+	DROP,
+	PUYON,
+	ELASE,
+	MOVE,
+	MUNYON,
+	MAX
+};
+
+using Sharepuyo = std::shared_ptr<Puyo>;
+using Unipuyo = std::unique_ptr<Puyo>;
+
+class Stage
+{
+public:
+	Stage();
+	Stage(Vector2&& offset, Vector2&& size);
+	~Stage();
+
+	int GetStageDraw(void);
+	void Draw(void);
+	void Updata(void);
+private:
+	bool init(void);
+	bool InstancePuyo(void);
+	bool OjamaInstance(void);
+	bool SetWall(void);
+	bool EleseData(void);
+	void Deletopuyo(void);
+
+	int _screenID;
+	Vector2 _offset;
+	Vector2 _size;
+
+	StgMode _stgmode;
+
+	Unipuyo puyo;
+	std::vector<Sharepuyo> PuyoVec;
+
+	std::unique_ptr<Controller> controller;
+
+	std::vector<Sharepuyo*> _data;
+	std::vector<Sharepuyo> _dataBase;
+	std::vector<Sharepuyo*> _erasedata;
+	std::vector<Sharepuyo> _erasedataBase;
+
+	std::list<Sharepuyo> OjamaList;
+
+	//std::vector<int*> _data;
+	//std::vector<int> _dataBase;
+	//std::vector<int*> _erasedataBase;
+
+	int _blocksize;
+	int count;
+
+	static int _stagecount;
+	int _id;
+	int _color;
+
+	int _maxrensa;
+	int _rensa;
+	int _erasenum;
+	//int _ojamanum;
+
+	//bool _ojamaFlag;
+
+
+	friend PlayUnit;
+	friend Dorop;
+	friend Elase;
+	friend Munyon;
+	friend Puyon;
+	friend Fall;
+	friend Ojamamode;
+};
+
