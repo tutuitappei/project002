@@ -1,15 +1,14 @@
 #include<DxLib.h>
 #include "Puyo.h"
 
-//struct Puyo puyocolor(PuyoID id,int)
-//{
-//    puyocolor(PuyoID::Red, 0xff0000);
-//    puyocolor(PuyoID::Blue, 0x0000ff);
-//    puyocolor(PuyoID::Green, 0x00ff00);
-//    puyocolor(PuyoID::Yellow, 0xffff00);
-//    puyocolor(PuyoID::Purpule, 0xff00ff);
-//    puyocolor(PuyoID::Ojama, 0x777777);
-//};
+Puyocolor Puyo::_puyocolor = {
+    {PuyoID::Red,0xff0000},
+    {PuyoID::Blue,0x0000ff},
+    {PuyoID::Green,0x00ff00},
+    {PuyoID::Yellow,0xffff00},
+    {PuyoID::Purpule,0xff00ff},
+    {PuyoID::Ojama,0xaaaaaa}
+};
 
 Puyo::Puyo(Vector2 vec, PuyoID id)
 {
@@ -52,6 +51,8 @@ void Puyo::Move(InputID id)
 
 void Puyo::Draw(void)
 {
+    //DrawCircle(_pos.x, _pos.y, _size.x/2, _puyocolor[_id],true);
+    //DrawCircle(0, 0, 16, 0x00ff00,true);
 }
 
 bool Puyo::Updata(void)
@@ -72,11 +73,8 @@ bool Puyo::Updata(void)
 
 bool Puyo::SetDirParmit(Dirpermit dirparmit)
 {
-    //if ()
-    //{
-
-    //}
-
+    _olddirparmit = _dirparmit;
+    _dirparmit = dirparmit;
     return true;
 }
 

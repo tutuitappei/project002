@@ -1,4 +1,5 @@
 #pragma once
+#include<map>
 #include"../Vector2.h"
 #include"../input/Inputid.h"
 
@@ -30,6 +31,8 @@ union Dirpermit
 
 };
 
+using Puyocolor = std::map<PuyoID, int>;
+
 class Puyo
 {
 public:
@@ -46,6 +49,9 @@ public:
 	const Vector2 GetGrid(int size);
 
 private:
+	static Puyocolor _puyocolor;		//Ç’ÇÊÇÃêF
+
+	Dirpermit _olddirparmit;
 	Dirpermit _dirparmit;
 
 	Vector2 _size;

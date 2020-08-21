@@ -4,6 +4,7 @@
 #include "Stage.h"
 #include"PlayUnit.h"
 #include"input/Keyboard1.h"
+#include"input/Pad.h"
 #include"input/Mouse.h"
 #include"mode/Dorop.h"
 #include"mode/Elase.h"
@@ -42,6 +43,10 @@ int Stage::GetStageDraw(void)
 
 void Stage::Draw(void)
 {
+	if (InstancePuyo())
+	{
+		puyo->Draw();
+	}
 }
 
 void Stage::Updata(void)
@@ -51,8 +56,10 @@ void Stage::Updata(void)
 	Dirpermit dirparmit;
 	dirparmit.perBit = { 1,1,1,1 };
 
-	/*auto pos = puyo->GetGrid(_blocksize);*/
-	/*int offset_y = ((pos.y % _blocksize) != 0);*/
+	Draw();
+
+	//auto pos = puyo->GetGrid(_blocksize);
+	//int offset_y = ((pos.y % _blocksize) != 0);
 
 	//for (auto data : controller->GetCntData())
 	//{
@@ -92,12 +99,23 @@ bool Stage::init(void)
 	_color = 0x000033 << (16 * _id);
 
 	controller = std::make_unique<Keyboard1>();
+	if (GetJoypadNum() > 0)
+	{
+		controller = std::make_unique<Pad>();
+	}
 	controller->Setup(_id);
 	return true;
 }
 
 bool Stage::InstancePuyo(void)
 {
+	//auto id = puyo->GetID();
+	//auto pos1 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize };
+	//auto pos2 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize + _blocksize / 2 };
+	//PuyoVec.emplace(PuyoVec.begin(), std::make_unique<Puyo>(pos1));
+	//id = puyo->GetID();
+	//PuyoVec.emplace(PuyoVec.begin(), std::make_unique<Puyo>(pos2));
+
 	return true;
 }
 

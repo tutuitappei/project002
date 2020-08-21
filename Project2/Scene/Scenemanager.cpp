@@ -12,8 +12,9 @@ void SceneManager::Run(void)
 	//}
 
 	SetDrawScreen(DX_SCREEN_BACK);							// •`‰ææ‚ðÊÞ¯¸ÊÞ¯Ì§‚ÉÝ’è
-	ClsDrawScreen();										// ‰æ–Ê‚ÌÁ‹Ž
 	stage->GetStageDraw();
+	ClsDrawScreen();										// ‰æ–Ê‚ÌÁ‹Ž
+
 	stage->Updata();
 }
 
