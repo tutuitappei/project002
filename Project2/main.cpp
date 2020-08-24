@@ -10,7 +10,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		SetGraphMode(960, 480, 16);								// 640*480ÄŞ¯ÄA65536FÓ°ÄŞ‚Éİ’è
 		ChangeWindowMode(true);									// true:window false:ÌÙ½¸Ø°İ
 
-		SetWindowText("PUYOPUYO");
+		SetWindowText("PUYOPUYO‚µ‚È‚¢‚â`‚Â");
 		if (DxLib_Init() == -1)									// DX×²ÌŞ×Ø‚Ì‰Šú‰»ˆ—
 		{
 			return false;

@@ -29,7 +29,7 @@ Stage::Stage(Vector2&& offset, Vector2&& size)
 	_blocksize = 32;
 	_stgmode = StgMode::DROP;
 	init();
-	//puyo = std::make_unique<Puyo>(Vector2{ 64,32 }, PuyoID::Red);
+	puyo = std::make_unique<Puyo>(Vector2{ 64,32 }, PuyoID::Red);
 }
 
 Stage::~Stage()
@@ -109,9 +109,9 @@ bool Stage::init(void)
 
 bool Stage::InstancePuyo(void)
 {
+	auto pos1 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize };
+	auto pos2 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize + _blocksize / 2 };
 	//auto id = puyo->GetID();
-	//auto pos1 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize };
-	//auto pos2 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize + _blocksize / 2 };
 	//PuyoVec.emplace(PuyoVec.begin(), std::make_unique<Puyo>(pos1));
 	//id = puyo->GetID();
 	//PuyoVec.emplace(PuyoVec.begin(), std::make_unique<Puyo>(pos2));

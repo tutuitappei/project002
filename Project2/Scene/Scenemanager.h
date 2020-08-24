@@ -1,10 +1,15 @@
 #pragma once
 #include<mutex>
 #include"../Vector2.h"
-#include"../Stage.h"
+#include"BaseScene.h"
 
 #define lpScene SceneManager::GetInstance()
 
+enum class SCENE {
+	TITLE,
+	GAME,
+	GAMEOVER
+};
 
 class SceneManager
 {
@@ -16,9 +21,11 @@ public:
 	}
 
 	void Run(void);
-
+	static void ChangeScene(SCENE scene);     //ƒV[ƒ“‚ğˆø”‚É‚æ‚Á‚Ä•Ï‚¦‚éŠÖ”
 
 	Vector2 pos;
+	const Vector2 screensize;
+	const Vector2 screenOffset;
 
 private:
 	SceneManager();
@@ -26,12 +33,8 @@ private:
 
 	int time;
 	int color;
-	int speed;
-	const Vector2 screensize;
-	const Vector2 screenOffset;
 
-	std::unique_ptr<Stage> stage;
-
+	static BaseScene* m_pScene;
 	static SceneManager* sta_Instance;
 };
 

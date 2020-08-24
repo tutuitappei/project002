@@ -51,8 +51,9 @@ void Puyo::Move(InputID id)
 
 void Puyo::Draw(void)
 {
-    //DrawCircle(_pos.x, _pos.y, _size.x/2, _puyocolor[_id],true);
-    //DrawCircle(0, 0, 16, 0x00ff00,true);
+    auto num = GetID();
+    DrawCircle(_pos.x, _pos.y, _size.x/2, _puyocolor[_id],true);
+    //DrawCircle(0, 0, 16, _puyocolor[_id],true);
 }
 
 bool Puyo::Updata(void)
