@@ -29,7 +29,7 @@ Stage::Stage(Vector2&& offset, Vector2&& size)
 	_blocksize = 32;
 	_stgmode = StgMode::DROP;
 	init();
-	puyo = std::make_unique<Puyo>(Vector2{ 64,32 }, PuyoID::Red);
+	puyo = std::make_unique<Puyo>(Vector2{ 16+32,16+32 }, PuyoID::Red);
 }
 
 Stage::~Stage()
@@ -43,6 +43,10 @@ int Stage::GetStageDraw(void)
 
 void Stage::Draw(void)
 {
+	//SetDrawScreen(_screenID);
+	//ClsDrawScreen();
+	DrawBox(0,0,_size.x* STAGE_MAP_X-1, _size.y * STAGE_MAP_Y-1,0xffffff,true);
+	//DrawBox(_size.x * STAGE_MAP);
 	if (InstancePuyo())
 	{
 		puyo->Draw();
@@ -58,39 +62,39 @@ void Stage::Updata(void)
 
 	Draw();
 
-	//auto pos = puyo->GetGrid(_blocksize);
-	//int offset_y = ((pos.y % _blocksize) != 0);
+	auto pos = puyo->GetGrid(_blocksize);
+	int offset_y = ((pos.y % _blocksize) != 0);
 
-	//for (auto data : controller->GetCntData())
-	//{
-	//	if (data.second[static_cast<int>(Trg::Now)] && !data.second[static_cast<int>(Trg::Old)])
-	//	{
-	//		if (_data[pos.x][pos.y - 1])
-	//		{
-	//			dirparmit.perBit.up = 0;
-	//		}
-	//		if (_data[pos.x][pos.y + 1])
-	//		{
-	//			dirparmit.perBit.down = 0;
-	//		}
-	//		if (_data[pos.x - 1][pos.y + offset_y])
-	//		{
-	//			dirparmit.perBit.left = 0;
-	//		}
-	//		if (_data[pos.x + 1][pos.y + offset_y])
-	//		{
-	//			dirparmit.perBit.right = 0;
-	//		}
+	for (auto data : controller->GetCntData())
+	{
+		if (data.second[static_cast<int>(Trg::Now)] && !data.second[static_cast<int>(Trg::Old)])
+		{
+			if (_data[pos.x][pos.y - 1])
+			{
+				dirparmit.perBit.up = 0;
+			}
+			if (_data[pos.x][pos.y + 1])
+			{
+				dirparmit.perBit.down = 0;
+			}
+			if (_data[pos.x - 1][pos.y + offset_y])
+			{
+				dirparmit.perBit.left = 0;
+			}
+			if (_data[pos.x + 1][pos.y + offset_y])
+			{
+				dirparmit.perBit.right = 0;
+			}
 
-	//		puyo->SetDirParmit(dirparmit);
-	//		puyo->Move(data.first);
+			puyo->SetDirParmit(dirparmit);
+			puyo->Move(data.first);
 
-	//	}
-	//	if ((data.first == InputID::Down) && data.second[static_cast<int>(Trg::Now)])
-	//	{
-	//		puyo->SoftDrop();
-	//	}
-	//}
+		}
+		if ((data.first == InputID::Down) && data.second[static_cast<int>(Trg::Now)])
+		{
+			puyo->SoftDrop();
+		}
+	}
 }
 
 bool Stage::init(void)
@@ -109,12 +113,12 @@ bool Stage::init(void)
 
 bool Stage::InstancePuyo(void)
 {
-	auto pos1 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize };
+/*	auto pos1 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize };
 	auto pos2 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize + _blocksize / 2 };
-	//auto id = puyo->GetID();
-	//PuyoVec.emplace(PuyoVec.begin(), std::make_unique<Puyo>(pos1));
-	//id = puyo->GetID();
-	//PuyoVec.emplace(PuyoVec.begin(), std::make_unique<Puyo>(pos2));
+	auto id = puyo->GetID();
+	PuyoVec.emplace(PuyoVec.begin(), std::make_unique<Puyo>(pos1));
+	id = puyo->GetID();
+	PuyoVec.emplace(PuyoVec.begin()+1, std::make_unique<Puyo>(pos2))*/;
 
 	return true;
 }
@@ -126,6 +130,16 @@ bool Stage::OjamaInstance(void)
 
 bool Stage::SetWall(void)
 {
+	//for (int i = 0; i < STAGE_MAP_X; i++)
+	//{
+	//	for (int j = 0; j < STAGE_MAP_Y; j++)
+	//	{
+	//		if ((i == 0 || i == STAGE_MAP_X - 1) || (j == STAGE_MAP_Y - 1))
+	//		{
+	//			//_data[i][j] = PuyoID::Wall;
+	//		}
+	//	}
+	//}
 	return true;
 }
 

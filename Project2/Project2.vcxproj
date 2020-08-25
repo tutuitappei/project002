@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Imagemanager.cpp" />
     <ClCompile Include="Scene\BaseScene.cpp" />
     <ClCompile Include="input\Pad.cpp" />
     <ClCompile Include="Scene\Game.cpp" />
@@ -158,6 +159,8 @@
     <ClCompile Include="Scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ImageID.h" />
+    <ClInclude Include="Imagemanager.h" />
     <ClInclude Include="Scene\BaseScene.h" />
     <ClInclude Include="details\Vector2.h" />
     <ClInclude Include="input\Pad.h" />

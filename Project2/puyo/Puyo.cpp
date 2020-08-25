@@ -16,6 +16,9 @@ Puyo::Puyo(Vector2 vec, PuyoID id)
     _size = { 32, 32 };
     _id = id;
 
+    _dirparmit.per = 0;
+    _olddirparmit.per = 0;
+
     _dropcnt = 0;
     _dropinter = 30;
     _dropspeed = 8;
