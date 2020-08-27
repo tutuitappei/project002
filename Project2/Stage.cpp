@@ -29,7 +29,7 @@ Stage::Stage(Vector2&& offset, Vector2&& size)
 	_blocksize = 32;
 	_stgmode = StgMode::DROP;
 	init();
-	puyo = std::make_unique<Puyo>(Vector2{ offset.x+16,offset.y+16 }, PuyoID::Red);
+	//puyo = std::make_unique<Puyo>(Vector2{ offset.x+16,offset.y+16 }, PuyoID::Red);
 }
 
 Stage::~Stage()
@@ -47,10 +47,7 @@ void Stage::Draw(void)
 	//ClsDrawScreen();
 	DrawBox(_offset.x,_offset.y,_size.x* STAGE_MAP_X-1, _size.y * STAGE_MAP_Y-1,0x000000,true);
 	//DrawBox(_size.x * STAGE_MAP);
-	if (InstancePuyo())
-	{
-		puyo->Draw();
-	}
+	puyo->Draw();
 }
 
 void Stage::Updata(void)
@@ -131,16 +128,16 @@ bool Stage::OjamaInstance(void)
 
 bool Stage::SetWall(void)
 {
-	//for (int i = 0; i < STAGE_MAP_X; i++)
-	//{
-	//	for (int j = 0; j < STAGE_MAP_Y; j++)
-	//	{
-	//		if ((i == 0 || i == STAGE_MAP_X - 1) || (j == STAGE_MAP_Y - 1))
-	//		{
-	//			//_data[i][j] = PuyoID::Wall;
-	//		}
-	//	}
-	//}
+	for (int i = 0; i < STAGE_MAP_X; i++)
+	{
+		for (int j = 0; j < STAGE_MAP_Y; j++)
+		{
+			if ((i == 0 || i == STAGE_MAP_X - 1) || (j == STAGE_MAP_Y - 1))
+			{
+				//_data[j][i] = PuyoVec.emplace(PuyoVec.begin()+1, std::make_unique<Puyo>(0,PuyoID::Wall));;
+			}
+		}
+	}
 	return true;
 }
 
