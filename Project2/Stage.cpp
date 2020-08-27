@@ -29,7 +29,7 @@ Stage::Stage(Vector2&& offset, Vector2&& size)
 	_blocksize = 32;
 	_stgmode = StgMode::DROP;
 	init();
-	puyo = std::make_unique<Puyo>(Vector2{ 16+32,16+32 }, PuyoID::Red);
+	puyo = std::make_unique<Puyo>(Vector2{ offset.x+16,offset.y+16 }, PuyoID::Red);
 }
 
 Stage::~Stage()
@@ -45,7 +45,7 @@ void Stage::Draw(void)
 {
 	//SetDrawScreen(_screenID);
 	//ClsDrawScreen();
-	DrawBox(0,0,_size.x* STAGE_MAP_X-1, _size.y * STAGE_MAP_Y-1,0xffffff,true);
+	DrawBox(_offset.x,_offset.y,_size.x* STAGE_MAP_X-1, _size.y * STAGE_MAP_Y-1,0x000000,true);
 	//DrawBox(_size.x * STAGE_MAP);
 	if (InstancePuyo())
 	{
@@ -108,17 +108,18 @@ bool Stage::init(void)
 		controller = std::make_unique<Pad>();
 	}
 	controller->Setup(_id);
+	InstancePuyo();
 	return true;
 }
 
 bool Stage::InstancePuyo(void)
 {
-/*	auto pos1 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize };
-	auto pos2 = Vector2{ _blocksize / 2 + _blocksize * 3, _blocksize + _blocksize / 2 };
+	auto pos1 = Vector2{_offset.x+16,_offset.y+16 };
+	auto pos2 = Vector2{ _offset.x + 16,_offset.y + 16 + _blocksize };
 	auto id = puyo->GetID();
-	PuyoVec.emplace(PuyoVec.begin(), std::make_unique<Puyo>(pos1));
+	PuyoVec.emplace(PuyoVec.begin(), std::make_unique<Puyo>(pos1,id));
 	id = puyo->GetID();
-	PuyoVec.emplace(PuyoVec.begin()+1, std::make_unique<Puyo>(pos2))*/;
+	PuyoVec.emplace(PuyoVec.begin()+1, std::make_unique<Puyo>(pos2,id));
 
 	return true;
 }

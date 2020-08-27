@@ -19,7 +19,10 @@ void SceneManager::Run(void)
 
 	m_pScene->Draw();
 	m_pScene->Updata();
-
+	if (colortimer < 255)
+	{
+		colortimer++;
+	}
 	time++;
 }
 
@@ -45,7 +48,7 @@ void SceneManager::ChangeScene(SCENE scene)
 	}
 }
 
-SceneManager::SceneManager() : pos(75, 70), screensize(960, 480), screenOffset(64, 32), time(0), color(0xffffff)
+SceneManager::SceneManager() : pos(75, 70), screensize(960, 480), screenOffset(64, 32), time(0), color(0xffffff), colortimer(0)
 {
 	m_pScene = new Title();
 }

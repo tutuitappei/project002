@@ -14,7 +14,7 @@ public:
 private:
 	std::unique_ptr<Controller> controller;
 	Vector2 pos;
-
+	int BG;
 
 	std::unique_ptr<Stage> stage;
 };

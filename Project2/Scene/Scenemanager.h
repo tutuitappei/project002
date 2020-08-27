@@ -27,6 +27,7 @@ public:
 	const Vector2 screensize;
 	const Vector2 screenOffset;
 
+	int colortimer;
 private:
 	SceneManager();
 	~SceneManager();
