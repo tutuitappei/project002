@@ -9,8 +9,9 @@ Game::Game()
 {
 	Vector2 offset = lpScene.screenOffset;
 	Vector2 size(32, 32);
-	stage = std::make_unique<Stage>(std::move(offset), std::move(size));
 	BG = LoadGraph("image/BG.png");
+
+	stage = std::make_unique<Stage>(std::move(offset), std::move(size));
 }
 
 Game::~Game()
@@ -26,5 +27,5 @@ void Game::Updata()
 void Game::Draw()
 {
 	DrawGraph(0,0,BG,true);
-	stage->GetStageDraw();
+	//stage->Draw();
 }

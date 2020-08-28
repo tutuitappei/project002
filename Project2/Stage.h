@@ -39,7 +39,7 @@ public:
 	Stage(Vector2&& offset, Vector2&& size);
 	~Stage();
 
-	int GetStageDraw(void);
+	void GetStageDraw(void);
 	void Draw(void);
 	void Updata(void);
 private:
@@ -50,6 +50,8 @@ private:
 	bool EleseData(void);
 	void Deletopuyo(void);
 
+	int GetStageID(void);
+
 	int _screenID;
 	Vector2 _offset;
 	Vector2 _size;
@@ -57,7 +59,7 @@ private:
 	StgMode _stgmode;
 
 	Unipuyo puyo;
-	std::vector<Sharepuyo> PuyoVec;
+	std::vector<Sharepuyo> puyoVec;
 
 	std::unique_ptr<Controller> controller;
 

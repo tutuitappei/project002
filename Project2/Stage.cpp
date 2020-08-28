@@ -29,75 +29,89 @@ Stage::Stage(Vector2&& offset, Vector2&& size)
 	_blocksize = 32;
 	_stgmode = StgMode::DROP;
 	init();
-	//puyo = std::make_unique<Puyo>(Vector2{ offset.x+16,offset.y+16 }, PuyoID::Red);
 }
 
 Stage::~Stage()
 {
+	_stagecount--;
 }
 
-int Stage::GetStageDraw(void)
+void Stage::GetStageDraw(void)
 {
-	return _screenID;
+	DrawRotaGraph(_offset.x + _size.x - _size.x / 4 + 64, _offset.y + _size.y / 2 + 64, 1, 0, GetStageID(), true);
+	
 }
 
 void Stage::Draw(void)
 {
 	//SetDrawScreen(_screenID);
 	//ClsDrawScreen();
-	DrawBox(_offset.x,_offset.y,_size.x* STAGE_MAP_X-1, _size.y * STAGE_MAP_Y-1,0x000000,true);
+	GetStageDraw();
+	DrawBox(_offset.x,_offset.y,_size.x* STAGE_MAP_X, _size.y * STAGE_MAP_Y,0x000000,true);
 	//DrawBox(_size.x * STAGE_MAP);
-	puyo->Draw();
+	for (auto&& puyo : puyoVec)
+	{
+		puyo->Draw();
+	}
 }
 
 void Stage::Updata(void)
 {
 	(*controller)();
-	
+	Draw();
 	Dirpermit dirparmit;
 	dirparmit.perBit = { 1,1,1,1 };
-
-	Draw();
-
-	auto pos = puyo->GetGrid(_blocksize);
-	int offset_y = ((pos.y % _blocksize) != 0);
-
-	for (auto data : controller->GetCntData())
+	for (auto&& puyo : puyoVec)
 	{
-		if (data.second[static_cast<int>(Trg::Now)] && !data.second[static_cast<int>(Trg::Old)])
+		auto pos = puyo->GetGrid(_blocksize);
+		int offset_y = ((pos.y % _blocksize) != 0);
+		for (auto data : controller->GetCntData())
 		{
-			if (_data[pos.x][pos.y - 1])
+			if (data.second[static_cast<int>(Trg::Now)] && !data.second[static_cast<int>(Trg::Old)])
 			{
-				dirparmit.perBit.up = 0;
-			}
-			if (_data[pos.x][pos.y + 1])
-			{
-				dirparmit.perBit.down = 0;
-			}
-			if (_data[pos.x - 1][pos.y + offset_y])
-			{
-				dirparmit.perBit.left = 0;
-			}
-			if (_data[pos.x + 1][pos.y + offset_y])
-			{
-				dirparmit.perBit.right = 0;
-			}
+				if (_data[pos.y-1][pos.x])
+				{
+					dirparmit.perBit.up = 0;
+				}
+				if (_data[pos.y+1][pos.x])
+				{
+					dirparmit.perBit.down = 0;
+				}
+				if (_data[pos.y + offset_y][pos.x - 1])
+				{
+					dirparmit.perBit.left = 0;
+				}
+				if (_data[pos.y + offset_y][pos.x + 1])
+				{
+					dirparmit.perBit.right = 0;
+				}
+				for (auto&& puyo : puyoVec)
+				{
+					puyo->SetDirParmit(dirparmit);
+					puyo->Move(data.first);
+				}
 
-			puyo->SetDirParmit(dirparmit);
-			puyo->Move(data.first);
-
+			}
+			if ((data.first == InputID::Down) && data.second[static_cast<int>(Trg::Now)])
+			{
+				puyo->SoftDrop();
+			}
 		}
-		if ((data.first == InputID::Down) && data.second[static_cast<int>(Trg::Now)])
-		{
-			puyo->SoftDrop();
-		}
+		puyo->Updata();
 	}
 }
 
 bool Stage::init(void)
 {
-	_screenID = MakeScreen(_size.x, _size.y, true);
+	_screenID = MakeScreen(_size.x * STAGE_MAP_X , _size.y * STAGE_MAP_Y,true);
 	_color = 0x000033 << (16 * _id);
+
+	_dataBase.resize(STAGE_MAP_X * STAGE_MAP_Y);
+	for (size_t no = 0; no < STAGE_MAP_Y; no++)
+	{
+		_data.emplace_back(&_dataBase[no * static_cast<size_t>(STAGE_MAP_X)]);
+	}
+
 
 	controller = std::make_unique<Keyboard1>();
 	if (GetJoypadNum() > 0)
@@ -106,17 +120,18 @@ bool Stage::init(void)
 	}
 	controller->Setup(_id);
 	InstancePuyo();
+	SetWall();
 	return true;
 }
 
 bool Stage::InstancePuyo(void)
 {
-	auto pos1 = Vector2{_offset.x+16,_offset.y+16 };
-	auto pos2 = Vector2{ _offset.x + 16,_offset.y + 16 + _blocksize };
+	auto pos1 = Vector2{_offset.x+16 +_size.x,_offset.y+16 };
+	auto pos2 = Vector2{ _offset.x + 16 +_size.x,_offset.y + 16 + _blocksize };
 	auto id = puyo->GetID();
-	PuyoVec.emplace(PuyoVec.begin(), std::make_unique<Puyo>(pos1,id));
+	puyoVec.emplace(puyoVec.begin(), std::make_unique<Puyo>(pos1,id));
 	id = puyo->GetID();
-	PuyoVec.emplace(PuyoVec.begin()+1, std::make_unique<Puyo>(pos2,id));
+	puyoVec.emplace(puyoVec.begin()+1, std::make_unique<Puyo>(pos2,id));
 
 	return true;
 }
@@ -134,7 +149,7 @@ bool Stage::SetWall(void)
 		{
 			if ((i == 0 || i == STAGE_MAP_X - 1) || (j == STAGE_MAP_Y - 1))
 			{
-				//_data[j][i] = PuyoVec.emplace(PuyoVec.begin()+1, std::make_unique<Puyo>(0,PuyoID::Wall));;
+				_data[j][i] = std::make_shared<Puyo>(Vector2(_blocksize * i, _blocksize * j),PuyoID::Wall);
 			}
 		}
 	}
@@ -148,4 +163,9 @@ bool Stage::EleseData(void)
 
 void Stage::Deletopuyo(void)
 {
+}
+
+int Stage::GetStageID(void)
+{
+	return _screenID;
 }

@@ -33,15 +33,15 @@ void Puyo::Move(InputID id)
     switch (id)
     {
     case InputID::Up:
-        _pos.y -= _size.y;
+        _pos.y -= _size.y / 2;
         break;
     case InputID::Down:
         break;
     case InputID::Left:
-        _pos.x -= _size.x;
+        _pos.x -= _size.x / 2;
         break;
     case InputID::Right:
-        _pos.x += _size.x;
+        _pos.x += _size.x / 2;
         break;
     case InputID::Btn1:
         break;
@@ -87,9 +87,14 @@ PuyoID Puyo::GetID(void)
     return PuyoID((rand() % (static_cast<int>(PuyoID::MAX) - 4)) + 1);
 }
 
+PuyoID Puyo::ReturnID(void)
+{
+    return _id;
+}
+
 const Vector2 Puyo::GetGrid(int size)
 {
-    return Vector2((_pos.x - size / 2) / size, (_pos.y - size / 2) / size);
+    return Vector2((_pos.x - size - size / 2) / size, (_pos.y - size / 2) / size);
 }
 
 

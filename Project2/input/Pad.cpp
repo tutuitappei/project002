@@ -26,10 +26,9 @@ bool Pad::Setup(int no)
 
 void Pad::Update(void)
 {
-	GetJoypadInputState(DX_INPUT_PAD1);
 	for (auto id : InputID())
 	{
 		_data[id][static_cast<int>(Trg::Old)] = _data[id][static_cast<int>(Trg::Now)];
-		_data[id][static_cast<int>(Trg::Now)] = _PadData[_inputTbl[id]];
+		_data[id][static_cast<int>(Trg::Now)] = (GetJoypadInputState(DX_INPUT_PAD1)&_inputTbl[id]);
 	}
 }

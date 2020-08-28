@@ -28,6 +28,9 @@ public:
 	const Vector2 screenOffset;
 
 	int colortimer;
+
+	bool _endfrag;
+	bool Endflag(void);
 private:
 	SceneManager();
 	~SceneManager();

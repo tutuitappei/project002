@@ -26,13 +26,17 @@ void Title::Updata()
 	{
 		lpScene.ChangeScene(SCENE::TITLE);
 	}
+
+	if (CheckHitKey(KEY_INPUT_0))
+	{
+		lpScene._endfrag = true;
+	}
 }
 
 void Title::Draw()
 {
-	DrawBox(50, 50, 100, 100, 0xff00ff, true);
 	DrawGraph(0,0, TitleBG,true);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, lpScene.colortimer);
-	DrawGraph(pos.x, pos.y-(lpScene.colortimer/5), TitleLogo, true);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, lpScene.colortimer/2);
+	DrawGraph(pos.x, pos.y-(lpScene.colortimer/10), TitleLogo, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND,0);
 }

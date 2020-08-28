@@ -42,10 +42,11 @@ public:
 	void Draw(void);
 	bool SoftDrop(void);
 	bool Updata(void);
-
+	
 	bool SetDirParmit(Dirpermit dirparmit);
 
 	PuyoID GetID(void);
+	PuyoID ReturnID(void);
 	const Vector2 GetGrid(int size);
 
 private:
