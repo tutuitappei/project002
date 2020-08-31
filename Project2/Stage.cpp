@@ -87,12 +87,8 @@ void Stage::Updata(void)
 				{
 					dirparmit.perBit.down = 0;
 				}
-				for (auto&& puyo : puyoVec)
-				{
-					puyo->SetDirParmit(dirparmit);
-					puyo->Move(data.first);
-				}
-
+				puyo->SetDirParmit(dirparmit);
+				puyo->Move(data.first);
 			}
 			if ((data.first == InputID::Down) && data.second[static_cast<int>(Trg::Now)])
 			{
@@ -187,7 +183,7 @@ bool Stage::EleseData(void)
 	}
 	else
 	{
-		//for (auto&& puyoo : PuyoVec )
+		//for (auto&& puyo : PuyoVec )
 		//{
 
 		//}
