@@ -17,6 +17,8 @@ public:
 
 	bool Add(int no);
 
+	void Draw(void);
+
 private:
 	Vector2 _pos;			//ネクストぷよ用座標	
 	nextList _nextPuyoList;	//ぷよリスト

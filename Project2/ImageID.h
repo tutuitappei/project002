@@ -4,10 +4,5 @@
 
 enum class ImageID
 {
-	TitleLogo,
-	TitleBG,
-	FrameBG,
-	Gameoverblack,
-	GameoverLogo,
 	Max
 };

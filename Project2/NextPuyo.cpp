@@ -50,3 +50,7 @@ bool NextPuyo::Add(int no)
 	}
 	return true;
 }
+
+void NextPuyo::Draw(void)
+{
+}

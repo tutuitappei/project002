@@ -133,11 +133,11 @@ bool Stage::init(void)
 bool Stage::InstancePuyo(void)
 {
 	auto pos1 = Vector2{_offset.x+16 +_size.x,_offset.y+16 };
-	auto pos2 = Vector2{ _offset.x + 16 +_size.x,_offset.y + 16 + _blocksize };
+	//auto pos2 = Vector2{ _offset.x + 16 +_size.x,_offset.y + 16 + _blocksize };
 	auto id = puyo->GetID();
 	puyoVec.emplace(puyoVec.begin(), std::make_unique<Puyo>(pos1,id));
-	id = puyo->GetID();
-	puyoVec.emplace(puyoVec.begin()+1, std::make_unique<Puyo>(pos2,id));
+	//id = puyo->GetID();
+	//puyoVec.emplace(puyoVec.begin()+1, std::make_unique<Puyo>(pos2,id));
 
 	return true;
 }

@@ -1,11 +1,11 @@
 #include<DxLib.h>
 #include "Imagemanager.h"
 
-#define lpScene SceneManager::GetInstance()
+#define lpImage Imagemanager::GetInstance()
 
 Tbl Imagemanager::_imageTble =
 {
-	
+
 };
 
 Imagemanager::Imagemanager()
