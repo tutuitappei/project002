@@ -10,7 +10,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		SetGraphMode(960, 480, 16);								// 640*480ﾄﾞｯﾄ、65536色ﾓｰﾄﾞに設定
 		ChangeWindowMode(true);									// true:window false:ﾌﾙｽｸﾘｰﾝ
 
-		SetWindowText("PUYOPUYOしたらよかったのになって思うや～つ…つまり『ぷよぷよ』ではない…");
+		SetWindowText("PUYOPUYOしたらよかったのになって思うや～つ…つまり『ぷ○ぷよ』ではない…");
 		if (DxLib_Init() == -1)									// DXﾗｲﾌﾞﾗﾘの初期化処理
 		{
 			return false;

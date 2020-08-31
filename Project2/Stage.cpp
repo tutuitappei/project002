@@ -15,7 +15,7 @@
 
 int Stage::_stagecount = 0;
 
-Stage::Stage():_screenID(0), _id(0), _color(0x000000), _blocksize(32), count(0), _stgmode(StgMode::DROP), _maxrensa(0), _rensa(0), _erasenum(0)
+Stage::Stage():_screenID(0), _id(0), _color(0x000000), _blocksize(32), count(0), _stgmode(StgMode::DROP), _maxrensa(0), _rensa(0), _erasenum(0),_gameoverflag(false),_ojamanum(0),_ojamaflag(false)
 {
 }
 
@@ -28,6 +28,9 @@ Stage::Stage(Vector2&& offset, Vector2&& size)
 	_size = std::move(size);
 	_blocksize = 32;
 	_stgmode = StgMode::DROP;
+	_gameoverflag = false;
+	_ojamanum = 0;
+	_ojamaflag = false;
 	init();
 }
 
@@ -39,7 +42,6 @@ Stage::~Stage()
 void Stage::GetStageDraw(void)
 {
 	DrawRotaGraph(_offset.x + _size.x - _size.x / 4 + 64, _offset.y + _size.y / 2 + 64, 1, 0, GetStageID(), true);
-	
 }
 
 void Stage::Draw(void)
@@ -47,7 +49,7 @@ void Stage::Draw(void)
 	//SetDrawScreen(_screenID);
 	//ClsDrawScreen();
 	GetStageDraw();
-	DrawBox(_offset.x,_offset.y,_size.x* STAGE_MAP_X, _size.y * STAGE_MAP_Y,0x000000,true);
+	DrawBox(_offset.x,_offset.y,_size.x* STAGE_MAP_X, _size.y * (STAGE_MAP_Y-1),0x000000,true);
 	//DrawBox(_size.x * STAGE_MAP);
 	for (auto&& puyo : puyoVec)
 	{
@@ -73,10 +75,6 @@ void Stage::Updata(void)
 				{
 					dirparmit.perBit.up = 0;
 				}
-				if (_data[pos.y+1][pos.x])
-				{
-					dirparmit.perBit.down = 0;
-				}
 				if (_data[pos.y + offset_y][pos.x - 1])
 				{
 					dirparmit.perBit.left = 0;
@@ -84,6 +82,10 @@ void Stage::Updata(void)
 				if (_data[pos.y + offset_y][pos.x + 1])
 				{
 					dirparmit.perBit.right = 0;
+				}
+				if (_data[pos.y + 1][pos.x])
+				{
+					dirparmit.perBit.down = 0;
 				}
 				for (auto&& puyo : puyoVec)
 				{
@@ -99,6 +101,7 @@ void Stage::Updata(void)
 		}
 		puyo->Updata();
 	}
+	_gameoverflag = GameOverChack();
 }
 
 bool Stage::init(void)
@@ -111,7 +114,10 @@ bool Stage::init(void)
 	{
 		_data.emplace_back(&_dataBase[no * static_cast<size_t>(STAGE_MAP_X)]);
 	}
-
+	for (size_t no = 0; no < STAGE_MAP_X; no++)
+	{
+		_data.emplace_back(&_dataBase[no * static_cast<size_t>(STAGE_MAP_Y)]);
+	}
 
 	controller = std::make_unique<Keyboard1>();
 	if (GetJoypadNum() > 0)
@@ -158,7 +164,50 @@ bool Stage::SetWall(void)
 
 bool Stage::EleseData(void)
 {
+	memset(_erasedataBase.data(), 0, _erasedataBase.size() * sizeof(PuyoID));
+
+	std::function<void(PuyoID, Vector2)> chpuyo = [&](PuyoID id, Vector2 vec) {
+		if (_erasedata[vec.y][vec.x]->GetID() == PuyoID::Non)
+		{
+			if (_data[vec.y][vec.x])
+			{
+				count++;
+				_erasenum++;
+				_erasedata[vec.y][vec.x] = _data[vec.y][vec.x];
+				chpuyo(id, { vec.x,vec.y - 1 });
+				chpuyo(id, { vec.x,vec.y + 1 });
+				chpuyo(id, { vec.x - 1,vec.y });
+				chpuyo(id, { vec.x + 1,vec.y });
+			}
+		}
+	};
+	if (count < 4)
+	{
+		memset(_erasedataBase.data(), 0, _erasedataBase.size() * sizeof(PuyoID));
+	}
+	else
+	{
+		//for (auto&& puyoo : PuyoVec )
+		//{
+
+		//}
+		return true;
+	}
 	return false;
+}
+
+bool Stage::GameOverChack(void)
+{
+	if (CheckHitKey(KEY_INPUT_P))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Stage::GameOver(void)
+{
+	return _gameoverflag;
 }
 
 void Stage::Deletopuyo(void)

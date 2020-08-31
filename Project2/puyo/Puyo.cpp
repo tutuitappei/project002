@@ -33,15 +33,24 @@ void Puyo::Move(InputID id)
     switch (id)
     {
     case InputID::Up:
-        _pos.y -= _size.y / 2;
+        //if (_dirparmit.perBit.up)
+        //{
+        //    _pos.y -= _size.y / 2;
+        //}
         break;
     case InputID::Down:
         break;
     case InputID::Left:
-        _pos.x -= _size.x / 2;
+        if (_dirparmit.perBit.left)
+        {
+            _pos.x -= _size.x;
+        }
         break;
     case InputID::Right:
-        _pos.x += _size.x / 2;
+        if (_dirparmit.perBit.right)
+        {
+            _pos.x += _size.x;
+        }
         break;
     case InputID::Btn1:
         break;
@@ -54,7 +63,7 @@ void Puyo::Move(InputID id)
 
 void Puyo::Draw(void)
 {
-    //DrawCircle(_pos.x, _pos.y, _size.x/2+2, 0xffffff,true);
+    DrawCircle(_pos.x, _pos.y, _size.x/2+2, 0xffffff,true);
     DrawCircle(_pos.x, _pos.y, _size.x / 2, _puyocolor[_id], true);
     //DrawCircle(0, 0, 16, _puyocolor[_id],true);
 }

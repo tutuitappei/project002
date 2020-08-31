@@ -21,7 +21,10 @@ Game::~Game()
 void Game::Updata()
 {
 	stage->Updata();
-	//lpScene.ChangeScene(SCENE::GAMEOVER);
+	if (stage->GameOver())
+	{
+		lpScene.ChangeScene(SCENE::GAMEOVER);
+	}
 }
 
 void Game::Draw()

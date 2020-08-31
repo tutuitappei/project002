@@ -8,7 +8,7 @@
 
 
 #define STAGE_MAP_X 8
-#define STAGE_MAP_Y 13
+#define STAGE_MAP_Y 14
 
 class PlayUnit;
 struct Dorop;
@@ -39,6 +39,9 @@ public:
 	Stage(Vector2&& offset, Vector2&& size);
 	~Stage();
 
+
+	bool GameOver(void);
+
 	void GetStageDraw(void);
 	void Draw(void);
 	void Updata(void);
@@ -48,6 +51,8 @@ private:
 	bool OjamaInstance(void);
 	bool SetWall(void);
 	bool EleseData(void);
+	bool GameOverChack(void);
+
 	void Deletopuyo(void);
 
 	int GetStageID(void);
@@ -84,10 +89,10 @@ private:
 	int _maxrensa;
 	int _rensa;
 	int _erasenum;
-	//int _ojamanum;
+	int _ojamanum;
 
-	//bool _ojamaFlag;
-
+	bool _ojamaflag;
+	bool _gameoverflag;
 
 	friend PlayUnit;
 	friend Dorop;
