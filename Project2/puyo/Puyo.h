@@ -48,8 +48,12 @@ public:
 	PuyoID GetID(void);
 	PuyoID ReturnID(void);
 	const Vector2 GetGrid(int size);
+	void pos(Vector2& vec);
+
+	const Vector2& pos(void) const;
 
 private:
+
 	static Puyocolor _puyocolor;		//Ç’ÇÊÇÃêF
 
 	Dirpermit _olddirparmit;

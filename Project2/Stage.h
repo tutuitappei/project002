@@ -41,6 +41,7 @@ public:
 
 
 	bool GameOver(void);
+	bool DownMode(void);
 
 	void GetStageDraw(void);
 	void Draw(void);
@@ -93,6 +94,7 @@ private:
 
 	bool _ojamaflag;
 	bool _gameoverflag;
+	bool _downFlag;
 
 	friend PlayUnit;
 	friend Dorop;

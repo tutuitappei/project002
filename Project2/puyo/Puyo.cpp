@@ -69,16 +69,19 @@ void Puyo::Draw(void)
 
 bool Puyo::Updata(void)
 {
-    if (_dropcnt < _dropinter)
+    if (_dirparmit.perBit.down)
     {
-        _dropcnt++;
-        return false;
-    }
-    else
-    {
-        _pos.y += _dropspeed;
-        _dropcnt = 0;
-        return true;
+        if (_dropcnt < _dropinter)
+        {
+            _dropcnt++;
+            return false;
+        }
+        else
+        {
+            _pos.y += _dropspeed;
+            _dropcnt = 0;
+            return true;
+        }
     }
     return false;
 }
@@ -103,6 +106,16 @@ PuyoID Puyo::ReturnID(void)
 const Vector2 Puyo::GetGrid(int size)
 {
     return Vector2((_pos.x - size - size / 2) / size, (_pos.y - size / 2) / size);
+}
+
+void Puyo::pos(Vector2& vec)
+{
+    _pos = vec;
+}
+
+const Vector2& Puyo::pos() const
+{
+    return _pos;
 }
 
 

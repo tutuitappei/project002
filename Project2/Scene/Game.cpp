@@ -30,5 +30,5 @@ void Game::Updata()
 void Game::Draw()
 {
 	DrawGraph(0,0,BG,true);
-	//stage->Draw();
+	stage->Draw();
 }

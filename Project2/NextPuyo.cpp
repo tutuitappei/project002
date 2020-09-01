@@ -4,6 +4,7 @@
 
 NextPuyo::NextPuyo(Vector2& pos, int data, int drawnum)
 {
+	_screenID = MakeScreen(97, 129);
 	_pos = pos;
 	_drawCount = drawnum;
 	Add(data);
@@ -26,10 +27,6 @@ bool NextPuyo::Add(int no)
 {
 	while (no)
 	{
-
-	}
-	while (no)
-	{
 		_nextPuyoList.emplace_back(
 			nextPair{
 				std::make_shared<Puyo>(Vector2{ 0,0 }, static_cast<PuyoID>((rand() % (static_cast<int>(PuyoID::MAX) - 4)) + 1)),
@@ -38,15 +35,15 @@ bool NextPuyo::Add(int no)
 		);
 		no--;
 	}
-	Vector2 offSet = { 0,0 };
-	Vector2 pos1 = { 0,16 };
-	Vector2 pos2 = { 0,16 };
+	Vector2 offset = { 64,32 };
+	Vector2 pos1 = {16,16 };
+	Vector2 pos2 = { 16,32 };
 	for (auto data : _nextPuyoList)
 	{
-		//data.first->pos(std::move(pos1));
-		//data.second->pos(std::move(pos2));
-		pos1 += offSet;
-		pos2 += offSet;
+		data.first->pos(pos1);
+		data.second->pos(pos2);
+		pos1 += offset;
+		pos2 += offset;
 	}
 	return true;
 }

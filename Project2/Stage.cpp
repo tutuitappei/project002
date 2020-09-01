@@ -15,7 +15,7 @@
 
 int Stage::_stagecount = 0;
 
-Stage::Stage():_screenID(0), _id(0), _color(0x000000), _blocksize(32), count(0), _stgmode(StgMode::DROP), _maxrensa(0), _rensa(0), _erasenum(0),_gameoverflag(false),_ojamanum(0),_ojamaflag(false)
+Stage::Stage():_screenID(0), _id(0), _color(0x000000), _blocksize(32), count(0), _stgmode(StgMode::DROP), _maxrensa(0), _rensa(0), _erasenum(0),_gameoverflag(false),_ojamanum(0),_ojamaflag(false), _downFlag(true)
 {
 }
 
@@ -31,6 +31,7 @@ Stage::Stage(Vector2&& offset, Vector2&& size)
 	_gameoverflag = false;
 	_ojamanum = 0;
 	_ojamaflag = false;
+	_downFlag = true;
 	init();
 }
 
@@ -60,7 +61,6 @@ void Stage::Draw(void)
 void Stage::Updata(void)
 {
 	(*controller)();
-	Draw();
 	Dirpermit dirparmit;
 	dirparmit.perBit = { 1,1,1,1 };
 	for (auto&& puyo : puyoVec)
@@ -69,34 +69,44 @@ void Stage::Updata(void)
 		int offset_y = ((pos.y % _blocksize) != 0);
 		for (auto data : controller->GetCntData())
 		{
+			if (_data[pos.y-1][pos.x])
+			{
+				dirparmit.perBit.up = 0;
+			}
+			if (_data[pos.y + offset_y][pos.x - 1])
+			{
+				dirparmit.perBit.left = 0;
+			}
+			if (_data[pos.y + offset_y][pos.x + 1])
+			{
+				dirparmit.perBit.right = 0;
+			}
+			if (_data[pos.y + 1][pos.x])
+			{
+				dirparmit.perBit.down = 0;
+				_downFlag = false;
+			}
+			else
+			{
+				if ((data.first == InputID::Down) && data.second[static_cast<int>(Trg::Now)])
+				{
+					puyo->SoftDrop();
+				}
+			}
 			if (data.second[static_cast<int>(Trg::Now)] && !data.second[static_cast<int>(Trg::Old)])
 			{
-				if (_data[pos.y-1][pos.x])
-				{
-					dirparmit.perBit.up = 0;
-				}
-				if (_data[pos.y + offset_y][pos.x - 1])
-				{
-					dirparmit.perBit.left = 0;
-				}
-				if (_data[pos.y + offset_y][pos.x + 1])
-				{
-					dirparmit.perBit.right = 0;
-				}
-				if (_data[pos.y + 1][pos.x])
-				{
-					dirparmit.perBit.down = 0;
-				}
-				puyo->SetDirParmit(dirparmit);
 				puyo->Move(data.first);
 			}
-			if ((data.first == InputID::Down) && data.second[static_cast<int>(Trg::Now)])
-			{
-				puyo->SoftDrop();
-			}
+			puyo->SetDirParmit(dirparmit);
 		}
 		puyo->Updata();
+		if (_downFlag == false)
+		{
+			//_data[pos.y][pos.x] = std::make_shared<Puyo>(Vector2(_blocksize * pos.x, _blocksize * pos.y), puyo->ReturnID());
+			//InstancePuyo();*/
+		}
 	}
+
 	_gameoverflag = GameOverChack();
 }
 
@@ -128,6 +138,7 @@ bool Stage::init(void)
 
 bool Stage::InstancePuyo(void)
 {
+	//auto nextpuyo = _nextpuyo->PickUp();
 	auto pos1 = Vector2{_offset.x+16 +_size.x,_offset.y+16 };
 	//auto pos2 = Vector2{ _offset.x + 16 +_size.x,_offset.y + 16 + _blocksize };
 	auto id = puyo->GetID();
@@ -135,6 +146,7 @@ bool Stage::InstancePuyo(void)
 	//id = puyo->GetID();
 	//puyoVec.emplace(puyoVec.begin()+1, std::make_unique<Puyo>(pos2,id));
 
+	_downFlag = true;
 	return true;
 }
 
@@ -194,7 +206,7 @@ bool Stage::EleseData(void)
 
 bool Stage::GameOverChack(void)
 {
-	if (CheckHitKey(KEY_INPUT_P))
+	if (_data[1][2])
 	{
 		return true;
 	}
@@ -204,6 +216,11 @@ bool Stage::GameOverChack(void)
 bool Stage::GameOver(void)
 {
 	return _gameoverflag;
+}
+
+bool Stage::DownMode(void)
+{
+	return _downFlag;
 }
 
 void Stage::Deletopuyo(void)
