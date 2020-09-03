@@ -1,7 +1,7 @@
 #include "PlayUnit.h"
 #include"puyo/Puyo.h"
 
-PlayUnit::PlayUnit()
+PlayUnit::PlayUnit() :_targetID(0)
 {
 
 }
@@ -9,6 +9,8 @@ PlayUnit::PlayUnit()
 PlayUnit::PlayUnit(Stage& stage)
 {
 	_stage;
+	_targetID = 0;
+	Init();
 }
 
 PlayUnit::~PlayUnit()
@@ -17,6 +19,11 @@ PlayUnit::~PlayUnit()
 
 void PlayUnit::Updata(Vector2 vec1, Vector2 vec2, bool RightFlag)
 {
+	if (_stage._stgmode != StgMode::DROP)
+	{
+		return;
+	}
+
 	Dirpermit dirparmit;
 	dirparmit.perBit = { 1,1,1,1 };
 	
@@ -78,4 +85,8 @@ void PlayUnit::Updata(Vector2 vec1, Vector2 vec2, bool RightFlag)
 	}
 
 
+}
+
+void PlayUnit::Init(void)
+{
 }

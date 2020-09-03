@@ -23,7 +23,7 @@ enum class StgMode
 {
 	DROP,
 	PUYON,
-	ELASE,
+	ERASE,
 	MOVE,
 	MUNYON,
 	MAX

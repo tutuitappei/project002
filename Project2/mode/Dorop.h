@@ -4,4 +4,8 @@
 
 struct Dorop
 {
+	bool operator() (Stage& stage)
+	{
+		
+	};
 };

@@ -42,20 +42,22 @@ Stage::~Stage()
 
 void Stage::GetStageDraw(void)
 {
-	DrawRotaGraph(_offset.x + _size.x - _size.x / 4 + 64, _offset.y + _size.y / 2 + 64, 1, 0, GetStageID(), true);
+	DrawGraph(_offset.x, _offset.y, GetStageID(), true);
+	//DrawRotaGraph(_offset.x + _size.x - _size.x / 4 + 64, _offset.y + _size.y / 2 + 64, 1, 0, GetStageID(), true);
 }
 
 void Stage::Draw(void)
 {
 	//SetDrawScreen(_screenID);
 	//ClsDrawScreen();
-	GetStageDraw();
-	DrawBox(_offset.x,_offset.y,_size.x* STAGE_MAP_X, _size.y * (STAGE_MAP_Y-1),0x000000,true);
+	DrawBox(_offset.x, _offset.y, _size.x* STAGE_MAP_X, _size.y * (STAGE_MAP_Y-1),0x000000,true);
 	//DrawBox(_size.x * STAGE_MAP);
 	for (auto&& puyo : puyoVec)
 	{
 		puyo->Draw();
 	}
+
+	//GetStageDraw();
 }
 
 void Stage::Updata(void)
@@ -102,8 +104,9 @@ void Stage::Updata(void)
 		puyo->Updata();
 		if (_downFlag == false)
 		{
-			//_data[pos.y][pos.x] = std::make_shared<Puyo>(Vector2(_blocksize * pos.x, _blocksize * pos.y), puyo->ReturnID());
-			//InstancePuyo();*/
+			_data[pos.x][pos.y] = puyo;					// id“ü‚ê‚Ä`
+			//puyo->playPuyo(false);
+			//reFlag = true;
 		}
 	}
 
@@ -195,10 +198,19 @@ bool Stage::EleseData(void)
 	}
 	else
 	{
-		//for (auto&& puyo : PuyoVec )
-		//{
-
-		//}
+		for (auto&& puyo : puyoVec)
+		{
+			auto vec = puyo->GetGrid(_blocksize);
+			if (_erasedata[vec.x][vec.y])
+			{
+				//puyo->activ(false);
+				//auto efPos = offset_ + puyo->pos() + (blockSize_ / 2);
+				//efPos.x += 512 * playerID_;
+				//lpEffectMng.SetEffect("‚Õ‚æ", efPos);
+				_data[vec.x][vec.y].reset();
+			}
+		}
+		//eraseCnt_ += count;
 		return true;
 	}
 	return false;
@@ -225,6 +237,11 @@ bool Stage::DownMode(void)
 
 void Stage::Deletopuyo(void)
 {
+	//auto itr = std::remove_if(puyoVec.begin(), puyoVec.end(), [](auto&& puyo) {});
+	//if (itr != puyoVec.end())
+	//{
+	//	puyoVec.erase(itr, puyoVec.end());
+	//}
 }
 
 int Stage::GetStageID(void)

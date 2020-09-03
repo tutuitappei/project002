@@ -86,6 +86,11 @@ bool Puyo::Updata(void)
     return false;
 }
 
+bool Puyo::CheckPuyon(void)
+{
+	return false;
+}
+
 bool Puyo::SetDirParmit(Dirpermit dirparmit)
 {
     _olddirparmit = _dirparmit;

@@ -42,7 +42,7 @@ public:
 	void Draw(void);
 	bool SoftDrop(void);
 	bool Updata(void);
-	
+	bool CheckPuyon(void);
 	bool SetDirParmit(Dirpermit dirparmit);
 
 	PuyoID GetID(void);

@@ -11,6 +11,11 @@ void Gameover::Updata()
 	{
 		lpScene.ChangeScene(SCENE::TITLE);
 	}
+	if (lpScene.colortimer != 0)
+	{
+		lpScene.colortimer = 0;
+	}
+	
 }
 
 void Gameover::Draw()

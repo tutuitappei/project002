@@ -10,7 +10,10 @@ public:
 	~PlayUnit();
 	void Updata(Vector2 vec1, Vector2 vec2, bool RightFlag);
 private:
+	void Init(void);
+
+	int _targetID;
 	Stage _stage;
-	Vector2 RotPos;
+	Vector2 _rotPos;
 };
 

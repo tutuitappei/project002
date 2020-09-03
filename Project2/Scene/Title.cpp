@@ -31,6 +31,10 @@ void Title::Updata()
 	{
 		lpScene._endfrag = true;
 	}
+	if (lpScene.colortimer < 510)
+	{
+		lpScene.colortimer++;
+	}
 }
 
 void Title::Draw()

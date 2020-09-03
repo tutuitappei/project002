@@ -19,10 +19,7 @@ void SceneManager::Run(void)
 
 	m_pScene->Draw();
 	m_pScene->Updata();
-	if (colortimer < 510)
-	{
-		colortimer++;
-	}
+
 	time++;
 }
 

@@ -3,8 +3,20 @@
 
 struct Puyon
 {
-	Stage& stage;
-	
-	int puyoCnt;
+	bool operator() (Stage& stage)
+	{
+		bool puyonFlag = false;
+
+		for (auto puyo : stage.puyoVec)
+		{
+			puyonFlag &= puyo->CheckPuyon();
+		}
+
+		if (!puyonFlag)
+		{
+			stage._stgmode = StgMode::ERASE;
+		}
+		return true;
+	};
 	
 };
