@@ -19,6 +19,8 @@ Puyo::Puyo(Vector2 vec, PuyoID id)
     _dirparmit.per = 0;
     _olddirparmit.per = 0;
 
+    _alive = true;
+
     _dropcnt = 0;
     _dropinter = 30;
     _dropspeed = 8;
@@ -67,6 +69,11 @@ void Puyo::Draw(void)
     //DrawCircle(0, 0, 16, _puyocolor[_id],true);
 }
 
+bool Puyo::alive(void)
+{
+    return _alive;
+}
+
 bool Puyo::Updata(void)
 {
     if (_dirparmit.perBit.down)
@@ -80,8 +87,12 @@ bool Puyo::Updata(void)
         {
             _pos.y += _dropspeed;
             _dropcnt = 0;
-            return true;
+            return false;
         }
+    }
+    else
+    {
+        return true;
     }
     return false;
 }
@@ -96,6 +107,11 @@ bool Puyo::SetDirParmit(Dirpermit dirparmit)
     _olddirparmit = _dirparmit;
     _dirparmit = dirparmit;
     return true;
+}
+
+Dirpermit Puyo::DirPermit(void)
+{
+    return _dirparmit;
 }
 
 PuyoID Puyo::GetID(void)
@@ -123,9 +139,28 @@ const Vector2& Puyo::pos() const
     return _pos;
 }
 
+void Puyo::SetInterval(int intr)
+{
+    _dropinter = intr;
+}
+
+
+void Puyo::alive(bool alive)
+{
+    _alive = alive;
+}
 
 bool Puyo::SoftDrop(void)
 {
     _dropcnt += _dropinter;
+    return false;
+}
+
+bool Puyo::Downnow(void)
+{
+    if ((_olddirparmit.perBit.down == 1)&&(_dirparmit.perBit.down == 0))
+    {
+        return true;
+    }
     return false;
 }

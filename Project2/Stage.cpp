@@ -32,7 +32,7 @@ Stage::Stage(Vector2&& offset, Vector2&& size)
 	_ojamanum = 0;
 	_ojamaflag = false;
 	_downFlag = true;
-	init();
+	Init();
 }
 
 Stage::~Stage()
@@ -63,58 +63,25 @@ void Stage::Draw(void)
 void Stage::Updata(void)
 {
 	(*controller)();
-	Dirpermit dirparmit;
-	dirparmit.perBit = { 1,1,1,1 };
-	for (auto&& puyo : puyoVec)
+	if (!_stagetype[_stgmode](*this))
 	{
-		auto pos = puyo->GetGrid(_blocksize);
-		int offset_y = ((pos.y % _blocksize) != 0);
-		for (auto data : controller->GetCntData())
+		for (auto&& puyo : puyoVec)
 		{
-			if (_data[pos.y-1][pos.x])
-			{
-				dirparmit.perBit.up = 0;
-			}
-			if (_data[pos.y + offset_y][pos.x - 1])
-			{
-				dirparmit.perBit.left = 0;
-			}
-			if (_data[pos.y + offset_y][pos.x + 1])
-			{
-				dirparmit.perBit.right = 0;
-			}
-			if (_data[pos.y + 1][pos.x])
-			{
-				dirparmit.perBit.down = 0;
-				_downFlag = false;
-			}
-			else
-			{
-				if ((data.first == InputID::Down) && data.second[static_cast<int>(Trg::Now)])
-				{
-					puyo->SoftDrop();
-				}
-			}
-			if (data.second[static_cast<int>(Trg::Now)] && !data.second[static_cast<int>(Trg::Old)])
-			{
-				puyo->Move(data.first);
-			}
-			puyo->SetDirParmit(dirparmit);
-		}
-		puyo->Updata();
-		if (_downFlag == false)
-		{
-			_data[pos.x][pos.y] = puyo;					// id“ü‚ê‚Ä`
-			//puyo->playPuyo(false);
-			//reFlag = true;
+			puyo->Updata();
 		}
 	}
-
 	_gameoverflag = GameOverChack();
 }
 
-bool Stage::init(void)
+bool Stage::Init(void)
 {
+	_stagetype.try_emplace(StgMode::DROP,Dorop());
+	_stagetype.try_emplace(StgMode::ERASE,Elase());
+	_stagetype.try_emplace(StgMode::MOVE,Fall());
+	_stagetype.try_emplace(StgMode::MUNYON, Munyon());
+	_stagetype.try_emplace(StgMode::PUYON,Puyon());
+	_stagetype.try_emplace(StgMode::OJAMA,Ojamamode());
+
 	_screenID = MakeScreen(_size.x * STAGE_MAP_X , _size.y * STAGE_MAP_Y,true);
 	_color = 0x000033 << (16 * _id);
 
@@ -127,7 +94,7 @@ bool Stage::init(void)
 	{
 		_data.emplace_back(&_dataBase[no * static_cast<size_t>(STAGE_MAP_Y)]);
 	}
-
+	_playunit = std::make_unique<PlayUnit>(*this);
 	controller = std::make_unique<Keyboard1>();
 	if (GetJoypadNum() > 0)
 	{
@@ -143,11 +110,11 @@ bool Stage::InstancePuyo(void)
 {
 	//auto nextpuyo = _nextpuyo->PickUp();
 	auto pos1 = Vector2{_offset.x+16 +_size.x,_offset.y+16 };
-	//auto pos2 = Vector2{ _offset.x + 16 +_size.x,_offset.y + 16 + _blocksize };
+	auto pos2 = Vector2{ _offset.x + 16 +_size.x,_offset.y + 16 + _blocksize };
 	auto id = puyo->GetID();
 	puyoVec.emplace(puyoVec.begin(), std::make_unique<Puyo>(pos1,id));
-	//id = puyo->GetID();
-	//puyoVec.emplace(puyoVec.begin()+1, std::make_unique<Puyo>(pos2,id));
+	id = puyo->GetID();
+	puyoVec.emplace(puyoVec.begin()+1, std::make_unique<Puyo>(pos2,id));
 
 	_downFlag = true;
 	return true;
@@ -173,7 +140,7 @@ bool Stage::SetWall(void)
 	return true;
 }
 
-bool Stage::EleseData(void)
+bool Stage::EleseData(PuyoID id, Vector2 vec)
 {
 	memset(_erasedataBase.data(), 0, _erasedataBase.size() * sizeof(PuyoID));
 
@@ -203,15 +170,46 @@ bool Stage::EleseData(void)
 			auto vec = puyo->GetGrid(_blocksize);
 			if (_erasedata[vec.x][vec.y])
 			{
-				//puyo->activ(false);
-				//auto efPos = offset_ + puyo->pos() + (blockSize_ / 2);
-				//efPos.x += 512 * playerID_;
-				//lpEffectMng.SetEffect("‚Õ‚æ", efPos);
+				puyo->alive(false);
+
 				_data[vec.x][vec.y].reset();
 			}
 		}
 		//eraseCnt_ += count;
 		return true;
+	}
+	return false;
+}
+
+bool Stage::Movepuyo(Sharepuyo& puyo)
+{
+	Dirpermit dirparmit;
+	dirparmit.perBit = { 1,1,1,1 };
+	auto pos = puyo->GetGrid(_blocksize);
+	int offset_y = ((pos.y % _blocksize) != 0);
+	for (auto data : controller->GetCntData())
+	{
+		if (_data[pos.y - 1][pos.x])
+		{
+			dirparmit.perBit.up = 0;
+		}
+		if (_data[pos.y + offset_y][pos.x - 1])
+		{
+			dirparmit.perBit.left = 0;
+		}
+		if (_data[pos.y + offset_y][pos.x + 1])
+		{
+			dirparmit.perBit.right = 0;
+		}
+		if (_data[pos.y + 1][pos.x])
+		{
+			dirparmit.perBit.down = 0;
+			_data[pos.x][pos.y] = puyo;
+			_downFlag = false;
+			return true;
+		}
+		puyo->SetDirParmit(dirparmit);
+
 	}
 	return false;
 }
@@ -237,11 +235,11 @@ bool Stage::DownMode(void)
 
 void Stage::Deletopuyo(void)
 {
-	//auto itr = std::remove_if(puyoVec.begin(), puyoVec.end(), [](auto&& puyo) {});
-	//if (itr != puyoVec.end())
-	//{
-	//	puyoVec.erase(itr, puyoVec.end());
-	//}
+	auto itr = std::remove_if(puyoVec.begin(), puyoVec.end(), [](auto&& puyo) {return!(puyo->alive()); });
+	if (itr != puyoVec.end())
+	{
+		puyoVec.erase(itr, puyoVec.end());
+	}
 }
 
 int Stage::GetStageID(void)

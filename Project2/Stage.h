@@ -1,9 +1,11 @@
 #pragma once
 #include<vector>
 #include<memory>
+#include<functional>
 #include<list>
 #include"Vector2.h"
 #include"input/Controller.h"
+#include"PlayUnit.h"
 #include"puyo/Puyo.h"
 
 
@@ -26,6 +28,7 @@ enum class StgMode
 	ERASE,
 	MOVE,
 	MUNYON,
+	OJAMA,
 	MAX
 };
 
@@ -47,11 +50,12 @@ public:
 	void Draw(void);
 	void Updata(void);
 private:
-	bool init(void);
+	bool Init(void);
 	bool InstancePuyo(void);
 	bool OjamaInstance(void);
 	bool SetWall(void);
-	bool EleseData(void);
+	bool EleseData(PuyoID id, Vector2 vec);
+	bool Movepuyo(Sharepuyo& puyo);
 	bool GameOverChack(void);
 
 	void Deletopuyo(void);
@@ -68,6 +72,7 @@ private:
 	std::vector<Sharepuyo> puyoVec;
 
 	std::unique_ptr<Controller> controller;
+	std::unique_ptr<PlayUnit> _playunit;
 
 	std::vector<Sharepuyo*> _data;
 	std::vector<Sharepuyo> _dataBase;
@@ -75,6 +80,8 @@ private:
 	std::vector<Sharepuyo> _erasedataBase;
 
 	std::list<Sharepuyo> OjamaList;
+
+	std::map<StgMode, std::function<bool(Stage&)>> _stagetype;
 
 	//std::vector<int*> _data;
 	//std::vector<int> _dataBase;

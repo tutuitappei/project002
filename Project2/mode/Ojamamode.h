@@ -4,6 +4,9 @@
 
 struct Ojamamode
 {
-
+	bool operator ()(Stage& stage)
+	{
+		return true;
+	}
 };
 

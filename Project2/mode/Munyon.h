@@ -4,5 +4,8 @@
 
 struct Munyon
 {
-
+	bool operator ()(Stage& stage)
+	{
+		return true;
+	}
 };

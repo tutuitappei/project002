@@ -39,11 +39,17 @@ public:
 	Puyo(Vector2 vec, PuyoID id);
 	~Puyo();
 	void Move(InputID id);
+	void SetInterval(int intr);
 	void Draw(void);
+	bool alive(void);
+	void alive(bool alive);
 	bool SoftDrop(void);
+	bool Downnow(void);
 	bool Updata(void);
 	bool CheckPuyon(void);
 	bool SetDirParmit(Dirpermit dirparmit);
+
+	Dirpermit DirPermit(void);
 
 	PuyoID GetID(void);
 	PuyoID ReturnID(void);
@@ -62,6 +68,8 @@ private:
 	Vector2 _size;
 	Vector2 _pos;
 	PuyoID _id;
+
+	bool _alive;
 
 	int _dropcnt;
 	int _dropinter;
