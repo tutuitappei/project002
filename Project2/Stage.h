@@ -57,10 +57,12 @@ private:
 	bool EleseData(PuyoID id, Vector2 vec);
 	bool Movepuyo(Sharepuyo& puyo);
 	bool GameOverChack(void);
-
 	void Deletopuyo(void);
 
 	int GetStageID(void);
+
+
+	Vector2 ConvertGrid(Vector2&& pos);
 
 	int _screenID;
 	Vector2 _offset;

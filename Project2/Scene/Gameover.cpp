@@ -20,4 +20,5 @@ void Gameover::Updata()
 
 void Gameover::Draw()
 {
+	DrawFormatString(0, 0, 0xffffff, "KEY_INPUT_0Å®TITLE");
 }

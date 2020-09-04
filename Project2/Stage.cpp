@@ -131,7 +131,7 @@ bool Stage::SetWall(void)
 	{
 		for (int j = 0; j < STAGE_MAP_Y; j++)
 		{
-			if ((i == 0 || i == STAGE_MAP_X - 1) || (j == STAGE_MAP_Y - 1))
+			if ((i == 0 || i == STAGE_MAP_X - 1) || (j==0||j == STAGE_MAP_Y - 1))
 			{
 				_data[j][i] = std::make_shared<Puyo>(Vector2(_blocksize * i, _blocksize * j),PuyoID::Wall);
 			}
@@ -184,33 +184,31 @@ bool Stage::EleseData(PuyoID id, Vector2 vec)
 bool Stage::Movepuyo(Sharepuyo& puyo)
 {
 	Dirpermit dirparmit;
-	dirparmit.perBit = { 1,1,1,1 };
+	dirparmit.perBit = { 0,1,1,1 };
 	auto pos = puyo->GetGrid(_blocksize);
 	int offset_y = ((pos.y % _blocksize) != 0);
-	for (auto data : controller->GetCntData())
-	{
-		if (_data[pos.y - 1][pos.x])
-		{
-			dirparmit.perBit.up = 0;
-		}
-		if (_data[pos.y + offset_y][pos.x - 1])
-		{
-			dirparmit.perBit.left = 0;
-		}
-		if (_data[pos.y + offset_y][pos.x + 1])
-		{
-			dirparmit.perBit.right = 0;
-		}
-		if (_data[pos.y + 1][pos.x])
-		{
-			dirparmit.perBit.down = 0;
-			_data[pos.x][pos.y] = puyo;
-			_downFlag = false;
-			return true;
-		}
-		puyo->SetDirParmit(dirparmit);
 
+	if (_data[pos.y - 1][pos.x])
+	{
+		dirparmit.perBit.up = 0;
 	}
+	if (_data[pos.y + offset_y][pos.x - 1])
+	{
+		dirparmit.perBit.left = 0;
+	}
+	if (_data[pos.y + offset_y][pos.x + 1])
+	{
+		dirparmit.perBit.right = 0;
+	}
+	if (_data[pos.y + 1][pos.x])
+	{
+		dirparmit.perBit.down = 0;
+		_data[pos.x][pos.y] = puyo;
+		_downFlag = false;
+		return true;
+	}
+	puyo->SetDirParmit(dirparmit);
+
 	return false;
 }
 
@@ -240,6 +238,12 @@ void Stage::Deletopuyo(void)
 	{
 		puyoVec.erase(itr, puyoVec.end());
 	}
+}
+
+Vector2 Stage::ConvertGrid(Vector2&& pos)
+{
+	// Žó‚¯Žæ‚Á‚½pos‚ðÏ½–Ú‚Ö
+	return Vector2{ pos.x / _blocksize,pos.y / _blocksize };
 }
 
 int Stage::GetStageID(void)

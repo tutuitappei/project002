@@ -5,6 +5,7 @@
 PlayUnit::PlayUnit(Stage& stage):_stage(stage)
 {
 	_targetID = 0;
+	_rotPos = { 0,0 };
 	Init();
 }
 
@@ -14,7 +15,6 @@ PlayUnit::~PlayUnit()
 
 bool PlayUnit::Updata(void)
 {
-	// ‘Š•û‚ª’…’n‚µ‚Ä‚¢‚È‚¢‚©Áª¯¸
 	auto CheckPair = [&](int tar) {
 		if (!_stage.puyoVec[tar ^ 1]->DirPermit().perBit.down)
 		{
@@ -79,19 +79,10 @@ bool PlayUnit::Updata(void)
 	}
 	if (CheckPair(0) || CheckPair(1))
 	{
-		// ’…’nŽžÀ°¹Þ¯ÄØ¾¯Ä
 		_targetID = 0;
 		return true;
 	}
-	// ‘€ì‚µ‚Ä‚¢‚é‚º‚Á
-	//playErea_.puyoList_[targetID_]->playPuyo(true);
-	// ŽŸ‚Ü‚Å‚É‚Í’¼‚· —ŽG‚È‘€ìØ‚è‘Ö‚¦
-	//change_.first = change_.second;
-	//change_.second = CheckHitKey(changeKey_[playErea_.playerID()]);
-	//if (!change_.first && change_.second)
-	//{
-	//	++playErea_.inputID_;
-	//}
+
 	return true;
 }
 
@@ -99,60 +90,6 @@ void PlayUnit::Init(void)
 {
 	_targetID = 0;
 	//change_ = { 0,0 };
-	_keyFun.try_emplace(InputID::Up, [&]() {
-		});
-	// Še“ü—Í—pŠÖ”“o˜^ ‚È‚ñ‚©‚Ü‚Æ‚ß‚ê‚»‚¤Š´–žÚ
-	/*_keyFun.try_emplace(InputID::Down, [&]() {
-		if ((*_stage.input_[playErea_.inputID_])->GetKeySty(InputID::Down))
-		{
-			_stage.puyoVec[0]->SoftDrop();
-			_stage.puyoVec[1]->SoftDrop();
-		}
-		});
-	_keyFun.try_emplace(InputID::Left, [&]() {
-		
-		if ((*playErea_.input_[playErea_.inputID_])->GetKeyTrg(InputID::Left))
-		{
-			auto pos1 = _stage.puyoVec[0]->GetGrid(_stage._blocksize);
-			auto pos2 = _stage.puyoVec[1]->GetGrid(_stage._blocksize);
-			int offset1 = (_stage.puyoVec[0]->pos().y % _stage._blocksize != 0);
-			int offset2 = (_stage.puyoVec[1]->pos().y % _stage._blocksize != 0);
-			if (!_stage._data[pos1.y + offset1][pos1.x - 1] && !_stage._data[pos2.y + offset2][pos2.x - 1])
-			{
-				_stage.puyoVec[0]->Move(InputID::Left);
-				_stage.puyoVec[1]->Move(InputID::Left);
-			}
-		}
-		});
-	_keyFun.try_emplace(InputID::Right, [&]() {
-
-		if ((*playErea_.input_[playErea_.inputID_])->GetKeyTrg(InputID::Right))
-		{
-			auto pos1 = _stage.puyoVec[0]->GetGrid(_stage._blocksize);
-			auto pos2 = _stage.puyoVec[1]->GetGrid(_stage._blocksize);
-			int offset1 = (_stage.puyoVec[0]->pos().y % _stage._blocksize != 0);
-			int offset2 = (_stage.puyoVec[1]->pos().y % _stage._blocksize != 0);
-			if (!_stage._data[pos1.y + offset1][pos1.x + 1] && !_stage._data[pos2.y + offset2][pos2.x + 1])
-			{
-				_stage.puyoVec[0]->Move(InputID::Right);
-				_stage.puyoVec[1]->Move(InputID::Right);
-			}
-		}
-		});
-	_keyFun.try_emplace(InputID::Btn1, [&]() {
-		if ((*playErea_.input_[playErea_.inputID_])->GetKeyTrg(InputID::Btn1))
-		{
-			Rota(_stage.puyoVec[_targetID]->pos(), _stage.puyoVec[_targetID ^ 1]->pos(), true);
-		}
-		});
-	_keyFun.try_emplace(InputID::Btn2, [&]() {
-		if ((*playErea_.input_[playErea_.inputID_])->GetKeyTrg(InputID::Btn2))
-		{
-			Rota(_stage.puyoVec[_targetID]->pos(), _stage.puyoVec[_targetID ^ 1]->pos(), false);
-		}
-		});*/
-
-
 }
 
 void PlayUnit::Rota(Vector2 vec1, Vector2 vec2, bool RightFlag)
@@ -162,30 +99,68 @@ void PlayUnit::Rota(Vector2 vec1, Vector2 vec2, bool RightFlag)
 		return;
 	}
 
+	auto trun = _stage._blocksize;
+	int offset = (_stage.puyoVec[_targetID]->pos().y % _stage._blocksize != 0);
+	int tmp = -_stage._blocksize;
 
-
-
-
-	if (RightFlag)
+	if (!RightFlag)
 	{
-
+		trun = -_stage._blocksize;
+		tmp = -tmp;
 	}
 	if (vec1.y < vec2.y)
 	{
-
+		_rotPos = Vector2{ vec2.x + trun,vec1.y };
 	}
 	if (vec1.y > vec2.y)
 	{
-
+		_rotPos = Vector2{ vec2.x - trun,vec1.y };
+		tmp = -tmp;
 	}
 	if (vec1.x < vec2.x)
 	{
-
+		_rotPos = Vector2{ vec1.x ,vec2.y - trun };
 	}
 	if (vec1.x > vec2.x)
 	{
-
+		_rotPos = Vector2{ vec1.x ,vec2.y + trun };
 	}
 
+
+	auto pos = _stage.ConvertGrid(std::move(_rotPos));
+	auto num1 = std::move(_rotPos);
+
+	if (!_stage._data[pos.x][pos.y + offset])
+	{
+		_stage.puyoVec[_targetID ^ 1]->pos(num1);
+	}
+	else
+	{
+		auto _rotPos2 = _rotPos;
+		if (pos.y >= 14 - 2)
+		{
+			_rotPos.y -= abs(tmp);
+			_rotPos2.y -= abs(tmp * 2);
+		}
+		else
+		{
+			_rotPos.x += tmp;
+			_rotPos2.x += tmp + tmp;
+		}
+
+		auto num2 = std::move(_rotPos2);
+		pos = _stage.ConvertGrid(std::move(_rotPos));
+		auto pos2 = _stage.ConvertGrid(std::move(_rotPos2));
+		if (!_stage._data[pos.x][pos.y + offset] && !_stage._data[pos2.x][pos2.y + offset])
+		{
+			_stage.puyoVec[_targetID ^ 1]->pos(num1);
+			_stage.puyoVec[_targetID]->pos(num2);
+		}
+	}
+	if (_stage.puyoVec[0]->pos().y > _stage.puyoVec[1]->pos().y)
+	{
+		std::swap(*_stage.puyoVec[_targetID], *_stage.puyoVec[_targetID ^ 1]);
+		_targetID ^= 1;
+	}
 
 }
