@@ -10,6 +10,7 @@ void Gameover::Updata()
 	if (CheckHitKey(KEY_INPUT_0))
 	{
 		lpScene.ChangeScene(SCENE::TITLE);
+		lpScene._endfrag = true;
 	}
 	if (lpScene.colortimer != 0)
 	{
@@ -20,5 +21,5 @@ void Gameover::Updata()
 
 void Gameover::Draw()
 {
-	DrawFormatString(0, 0, 0xffffff, "KEY_INPUT_0Å®TITLE");
+	DrawFormatString(0, 0, 0xffffff, "KEY_INPUT_0 Å® GAME END");
 }

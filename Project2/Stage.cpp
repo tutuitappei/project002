@@ -31,7 +31,7 @@ Stage::Stage(Vector2&& offset, Vector2&& size)
 	_gameoverflag = false;
 	_ojamanum = 0;
 	_ojamaflag = false;
-	_downFlag = true;
+	_downFlag = false;
 	Init();
 }
 
@@ -94,6 +94,15 @@ bool Stage::Init(void)
 	{
 		_data.emplace_back(&_dataBase[no * static_cast<size_t>(STAGE_MAP_Y)]);
 	}
+	_erasedataBase.resize(STAGE_MAP_X * STAGE_MAP_Y);
+	for (size_t no = 0; no < STAGE_MAP_Y; no++)
+	{
+		_erasedata.emplace_back(&_dataBase[no * static_cast<size_t>(STAGE_MAP_X)]);
+	}
+	for (size_t no = 0; no < STAGE_MAP_X; no++)
+	{
+		_erasedata.emplace_back(&_dataBase[no * static_cast<size_t>(STAGE_MAP_Y)]);
+	}
 	_playunit = std::make_unique<PlayUnit>(*this);
 	controller = std::make_unique<Keyboard1>();
 	if (GetJoypadNum() > 0)
@@ -144,8 +153,14 @@ bool Stage::EleseData(PuyoID id, Vector2 vec)
 {
 	memset(_erasedataBase.data(), 0, _erasedataBase.size() * sizeof(PuyoID));
 
+	for (auto&& puyo : puyoVec)
+	{
+		auto pos = puyo->GetGrid(_blocksize);
+		_erasedata[pos.y][pos.x].reset();
+	}
+
 	std::function<void(PuyoID, Vector2)> chpuyo = [&](PuyoID id, Vector2 vec) {
-		if (_erasedata[vec.y][vec.x]->GetID() == PuyoID::Non)
+		if (!_erasedata[vec.y][vec.x])
 		{
 			if (_data[vec.y][vec.x])
 			{
@@ -159,6 +174,7 @@ bool Stage::EleseData(PuyoID id, Vector2 vec)
 			}
 		}
 	};
+	chpuyo(id, vec);
 	if (count < 4)
 	{
 		memset(_erasedataBase.data(), 0, _erasedataBase.size() * sizeof(PuyoID));
@@ -203,18 +219,17 @@ bool Stage::Movepuyo(Sharepuyo& puyo)
 	if (_data[pos.y + 1][pos.x])
 	{
 		dirparmit.perBit.down = 0;
-		_data[pos.x][pos.y] = puyo;
-		_downFlag = false;
-		return true;
+		_data[pos.y][pos.x] = puyo;
+		_downFlag = true;
 	}
 	puyo->SetDirParmit(dirparmit);
 
-	return false;
+	return _downFlag;
 }
 
 bool Stage::GameOverChack(void)
 {
-	if (_data[1][2])
+	if (_data[2][2])
 	{
 		return true;
 	}

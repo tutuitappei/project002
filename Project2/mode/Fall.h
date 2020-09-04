@@ -33,7 +33,7 @@ struct Fall
 			{
 				if (stage._data[y][pos.x])
 				{
-					if (stage._data[y][pos.x]->GetID() == PuyoID::Wall&& stage._data[y][pos.x]->GetID() == PuyoID::Ojama)
+					if (stage._data[y][pos.x]->ReturnID() == PuyoID::Wall&& stage._data[y][pos.x]->ReturnID() == PuyoID::Ojama)
 					{
 
 							break;

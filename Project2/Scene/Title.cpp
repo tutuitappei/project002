@@ -43,4 +43,5 @@ void Title::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, lpScene.colortimer/2);
 	DrawGraph(pos.x, pos.y-(lpScene.colortimer/10), TitleLogo, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND,0);
+	DrawFormatString(400, 400, 0xffffff, "START SPACE GAME");
 }

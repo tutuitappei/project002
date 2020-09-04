@@ -9,7 +9,7 @@ struct Elase
 		bool delFlag = false;
 		for (auto&& dropcd : stage.puyoVec)
 		{
-			delFlag |= stage.EleseData(dropcd->GetID(),dropcd->GetGrid(stage._blocksize));
+			delFlag |= stage.EleseData(dropcd->ReturnID(),dropcd->GetGrid(stage._blocksize));
 		}
 		if (delFlag)
 		{
