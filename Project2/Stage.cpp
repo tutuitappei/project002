@@ -151,6 +151,10 @@ bool Stage::SetWall(void)
 
 bool Stage::EleseData(PuyoID id, Vector2 vec)
 {
+	if (_data[vec.y][vec.x])
+	{
+		_data[vec.y][vec.x]->ReturnID();
+	}
 	memset(_erasedataBase.data(), 0, _erasedataBase.size() * sizeof(PuyoID));
 
 	for (auto&& puyo : puyoVec)
@@ -229,7 +233,7 @@ bool Stage::Movepuyo(Sharepuyo& puyo)
 
 bool Stage::GameOverChack(void)
 {
-	if (_data[2][2])
+	if (_data[1][2])
 	{
 		return true;
 	}
